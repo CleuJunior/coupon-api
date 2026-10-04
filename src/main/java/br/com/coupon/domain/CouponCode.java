@@ -1,5 +1,6 @@
 package br.com.coupon.domain;
 
+import br.com.coupon.domain.exception.InvalidCouponCodeException;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,7 +21,12 @@ public class CouponCode {
     }
 
     private static String standardize(String code) {
-        // TODO implmentar regra de stand
-        return code;
+        String std = code.replaceAll("[^a-zA-Z0-9]", "");
+
+        if (std.length() != REQUIRED_LENGTH) {
+            throw new InvalidCouponCodeException(std);
+        }
+
+        return std;
     }
 }
