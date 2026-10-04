@@ -16,6 +16,7 @@ import java.util.Objects;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Coupon {
 
+    private Long id;
     private final CouponCode code;
     private final String description;
     private final BigDecimal discountValue;
@@ -38,7 +39,7 @@ public class Coupon {
     }
 
     public void delete() {
-        if (Objects.nonNull(deletedAt)) {
+    if (Objects.nonNull(deletedAt)) {
             throw  new CouponAlreadyDeletedException();
         }
 
