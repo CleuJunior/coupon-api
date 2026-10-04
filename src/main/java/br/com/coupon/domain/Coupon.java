@@ -38,9 +38,23 @@ public class Coupon {
         return new Coupon(couponCode, description, discountValue, expirationDate, published);
     }
 
+    public static Coupon reconstruct(Long id,
+                            String code,
+                            String description,
+                            BigDecimal discountValue,
+                            LocalDate expirationDate,
+                            boolean published,
+                            LocalDateTime deletedAt) {
+
+        Coupon coupon = new Coupon(CouponCode.of(code), description, discountValue, expirationDate, published);
+        coupon.id = id;
+        coupon.deletedAt = deletedAt;
+        return coupon;
+    }
+
     public void delete() {
-    if (Objects.nonNull(deletedAt)) {
-            throw  new CouponAlreadyDeletedException();
+        if (Objects.nonNull(deletedAt)) {
+            throw new CouponAlreadyDeletedException();
         }
 
         deletedAt = LocalDateTime.now();
