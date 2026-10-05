@@ -14,3 +14,9 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+coupon:
+  openapi:
+    title: "Coupon API"
+    description: "API para cadastro e remoção de cupons de desconto"
+    version: "v1"
