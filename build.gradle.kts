@@ -13,6 +13,25 @@ java {
 	}
 }
 
+sourceSets {
+	create("integrationTest") {
+		java.srcDir("src/integrationTest/java")
+		resources.srcDir("src/integrationTest/resources")
+		compileClasspath += sourceSets.main.get().output + sourceSets.test.get().output
+		runtimeClasspath += sourceSets.main.get().output + sourceSets.test.get().output
+	}
+}
+
+configurations.getByName("integrationTestImplementation") {
+	extendsFrom(configurations.getByName("testImplementation"))
+}
+configurations.getByName("integrationTestRuntimeOnly") {
+	extendsFrom(configurations.getByName("testRuntimeOnly"))
+}
+configurations.getByName("integrationTestAnnotationProcessor") {
+	extendsFrom(configurations.getByName("testAnnotationProcessor"))
+}
+
 repositories {
 	mavenCentral()
 }
@@ -27,13 +46,25 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.h2database:h2")
 	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testCompileOnly("org.projectlombok:lombok")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testAnnotationProcessor("org.projectlombok:lombok")
+	"integrationTestImplementation"("io.rest-assured:rest-assured:6.0.1")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+val integrationTest = tasks.register<Test>("integrationTest") {
+	description = "Runs integration tests."
+	group = "verification"
+	testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+	classpath = sourceSets["integrationTest"].runtimeClasspath
+	shouldRunAfter(tasks.test)
+}
+
+tasks.check {
+	dependsOn(integrationTest)
 }
